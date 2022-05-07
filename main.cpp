@@ -4,7 +4,7 @@
 
 const int screenWidth = 800;
 const int screenHeight = 600;
-static const int rows = 10;
+static const int rows = 12;
 static const int colums = 10;
 static const int nodeHeight = screenHeight/rows; 
 static const int nodeWidth = screenWidth/colums;
