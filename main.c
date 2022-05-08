@@ -1,75 +1,94 @@
-#include <iostream>
-#include <string>
-#include "raylib.h"
+#include "include\raylib.h"
 
-const int screenWidth = 800;
-const int screenHeight = 600;
-static const int rows = 20;
-static const int colums = 20;
-static const int nodeHeight = screenHeight/rows; 
-static const int nodeWidth = screenWidth/colums;
-static Color nodeColor = {BLUE};
+#include <stdio.h>
+#include <stdlib.h>
+#include <stdbool.h>
 
-struct Node
+
+#define SCREENWIDTH 800
+#define SCREENHEIGHT 600
+#define ROWS 20
+#define COLUMS 20
+#define NODEWIDTH 20
+#define NODEHEIGHT 20
+
+typedef struct
 {
-    Rectangle rec;
-    Color col;
-};
+    int rowPositon;
+    int columnPosition;
+    Rectangle rectangle;
+    Color color;
+}node_t;
 
+node_t nodes[ROWS][COLUMS] = {0};
 
-int main(void)
+void draw_nodes(void)
 {
-    InitWindow(screenWidth, screenHeight, "Test");
-    SetTargetFPS(60);                   // Set our game to run at 60 frames-per-second
-    Node nodes[rows][colums];
-
-    for (int i = 0; i < rows; i++)
+    for (size_t i = 0; i < ROWS; i++)
     {
-        for (int j = 0; j < colums; j++)
+        for (size_t j = 0; j < COLUMS; j++)
         {
-            nodes[i][j].rec.x = j*(screenWidth/colums);
-            nodes[i][j].rec.y = i*(screenHeight/rows);
-            nodes[i][j].rec.width = nodeWidth;
-            nodes[i][j].rec.height = nodeHeight;
+            DrawRectangleRec(nodes[i][j].rectangle, nodes[i][j].color);
+        }
+    }
+
+}
+
+void init_nodes(void)
+{
+    for (size_t i = 0; i < ROWS; i++)
+    {
+        for (size_t j = 0; j < COLUMS; j++)
+        {
+            nodes[i][j].rowPositon = i;
+            nodes[i][j].columnPosition = j;
+            nodes[i][j].rectangle.height = NODEHEIGHT;
+            nodes[i][j].rectangle.width = NODEWIDTH;
+            nodes[i][j].rectangle.x = j * NODEWIDTH;
+            nodes[i][j].rectangle.y = i * NODEHEIGHT;
+            // grid color
             if((i+j) % 2)
             {
-                nodes[i][j].col = Color{BLUE};
+                nodes[i][j].color = BLUE;
             }
             else
             {
-                nodes[i][j].col = Color{SKYBLUE};
+                nodes[i][j].color = SKYBLUE;
             }
         }
     }
+}
+
+int main(void)
+{
+    InitWindow(SCREENWIDTH, SCREENHEIGHT, "Test");
+    SetTargetFPS(60);                   // Set our game to run at 60 frames-per-second
+    
+    init_nodes();
 
     // Main game loop
     while (!WindowShouldClose())        // Detect window close button or ESC key
     {
-
         BeginDrawing();
-            ClearBackground(BLACK);
-            //DrawText(std::to_string(rows).c_str(), 300, 20, 12, Color{YELLOW});
+        {
+            
+            ClearBackground(WHITE);
 
-            for (int i = 0; i < rows; i++)
-            {
-                for (int j = 0; j < colums; j++)
-                {
-                    DrawRectangleRec(nodes[i][j].rec, nodes[i][j].col);
-                }
-            }
+            draw_nodes();
 
             if(IsMouseButtonDown(MOUSE_BUTTON_LEFT))
             {
                 Vector2 pos = GetMousePosition();
-                int rowIndex = pos.y/nodeHeight;
-                int colIndex = pos.x/nodeWidth;
-                if((rowIndex < rows) && (colIndex < colums))
+                int rowIndex = pos.y/NODEHEIGHT;
+                int colIndex = pos.x/NODEWIDTH;
+                if((rowIndex < ROWS) && (colIndex < COLUMS))
                 {
-                    nodes[rowIndex][colIndex].col = {RED};
+                    nodes[rowIndex][colIndex].color = RED;
                 }
             }
-            
             DrawFPS(0,0);
+        
+        }
         EndDrawing();
     }
 
