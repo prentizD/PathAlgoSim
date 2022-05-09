@@ -164,8 +164,6 @@ void set_tile_path(void)
             tiles[draw_position.row][draw_position.column].color = BLACK;
         }   
     }
-    
-
 }
 
 
