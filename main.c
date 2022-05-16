@@ -3,7 +3,7 @@
 #include <stdbool.h>
 #include <inttypes.h>
 
-#include "raylib.h"
+#include "include/raylib.h"
 
 #define SCREENWIDTH 1000
 #define SCREENHEIGHT 800
@@ -185,7 +185,7 @@ void init_queue(queue_t *q){
 }
 
 bool is_queue_empty(queue_t *q){
-    if(q->count == NULL){
+    if(q->count == 0){
         return true;
     }
     else{
@@ -312,8 +312,6 @@ void dijkstra(int_Vector_2D startnode, int_Vector_2D endnode){
     }
     bool finished = false;
     int min_dist = INT_MAX;
-    int min_end_dist = INT_MAX;
-    int end_cost;
     int_Vector_2D current_u;
     int_Vector_2D shortest;
 
