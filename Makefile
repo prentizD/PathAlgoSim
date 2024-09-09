@@ -1,13 +1,14 @@
+CC = gcc
 CFLAGS = -O1 -Wall -std=c99 -Wno-missing-braces
+LIBS = -lraylib -lGL -lm -lpthread -ldl -lrt -lX11
+TARGET = simulation
+BUILD_DIR = build
 
-ifeq ($(OS),Windows_NT)
-	LIBS = -lraylib -lopengl32 -lgdi32 -lwinmm
-else
-	UNAME_S := $(shell uname -s)
-	ifeq ($(UNAME_S),Linux)
-		LIBS = -lraylib -lGL -lm -lpthread -ldl -lrl -lx11
-	endif
-endif
+all: $(BUILD_DIR)/$(TARGET)
 
-default:
-	gcc main.c -o simulation.exe $(CFLAGS) -I include/ -L lib/ $(LIBS)
+$(BUILD_DIR)/$(TARGET): main.c
+	mkdir -p ${BUILD_DIR}
+	$(CC) $(CFLAGS) main.c -o $@ $(LIBS)
+
+clean:
+	rm -rf $(BUILD_DIR)

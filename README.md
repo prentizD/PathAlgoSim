@@ -8,19 +8,22 @@ In short the raylib is a easy to use lightweighted game engine without the need 
 
 Requirements:
 
-- CMake Version >= 3.23.1 
+Linux:
+- gcc 
+- install raylib (see: https://github.com/raysan5/raylib/wiki/Working-on-GNU-Linux) (Tested on V4.0 and V5.0)
+- (linux requires only the \include directory and the main.c file)
+
+
+Windows:
 - mingw32 (for Windows)
-- make (it is called mingw32-make.exe under Windows with mingw32)
-- gcc (using Linux)
+(for windows V4.0 is used with the precompiled /lib/libraylib.a)
 
 ## Linux:
 
-cmake -S . -B build/
-cd build && make && ./PathAlgoSim
+make
+./build/simulation
 
 ## Windows:
 
-cmake -S . -B build/ -G "MinGW Makefiles"
-cd build && mingw32-make && PathAlgoSim
-
-        
+gcc main.c -o simulation.exe -O1 -Wall -std=c99 -Wno-missing-braces -I include/ -L lib/ -lraylib -lopengl32 -lgdi32 -lwinmm
+./simulation.exe
