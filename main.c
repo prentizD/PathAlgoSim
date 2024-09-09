@@ -1,7 +1,5 @@
 /************************************************************************************
-* Author:          Daniel Holstein <daniel.holstein@stud.hs-bochum.de>
-* Version:         v1.0.0
-* Code-Source:     https://gitlab.cvh-server.de/dholstein/algorithmen_visualisierung
+Simple project by me (github user:prentizD) trying to visualize some path finding algorithms with the use of raylib as a gameengine
 *************************************************************************************/
 
 #include <stdio.h>
@@ -11,7 +9,7 @@
 #include <math.h>
 #include <limits.h>
 
-#include "include/raylib.h"
+#include "raylib.h"
 
 #define SCREENWIDTH 1100
 #define SCREENHEIGHT 900
