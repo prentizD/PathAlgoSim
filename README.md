@@ -15,6 +15,8 @@ Linux:
 
 ## Linux:
 
+source path_to_emsdk/emsdk_env.sh
 make
-./build/simulation
+python3 -m http.server 8080
+
 

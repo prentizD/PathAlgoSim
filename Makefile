@@ -1,14 +1,6 @@
-CC = gcc
-CFLAGS = -O1 -Wall -std=c99 -Wno-missing-braces
-LIBS = -lraylib -lGL -lm -lpthread -ldl -lrt -lX11
-TARGET = simulation
-BUILD_DIR = build
 
-all: $(BUILD_DIR)/$(TARGET)
-
-$(BUILD_DIR)/$(TARGET): main.c
-	mkdir -p ${BUILD_DIR}
-	$(CC) $(CFLAGS) main.c -o $@ $(LIBS)
+game.htlm: main.c 
+	emcc -o game.html main.c -Os -Wall ./lib/libraylib.a -I./include -s USE_GLFW=3 -s --shell-file ./minshell.html -DPLATFORM_WEB
 
 clean:
-	rm -rf $(BUILD_DIR)
+	rm -f game.wasm game.html game.js

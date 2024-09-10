@@ -11,6 +11,10 @@ Simple project by me (github user:prentizD) trying to visualize some path findin
 
 #include "raylib.h"
 
+#if defined(PLATFORM_WEB)
+    #include <emscripten/emscripten.h>
+#endif
+
 #define SCREENWIDTH 1100
 #define SCREENHEIGHT 900
 #define TARGET_FPS 60
@@ -87,7 +91,7 @@ Queue *final_path;
 Position draw_position;
 Tile **tiles;
 bool draw_instant = false;
-double time = 0;
+double timedt = 0.0;
 char time_buffer[50];
 double timeout = 0;
 Rectangle button_reset;
@@ -103,6 +107,9 @@ Rectangle button_size_minus_ten;
 Rectangle mazebutton_background;
 Rectangle button_N_maze;
 Rectangle button_wall;
+
+// Update and Draw one frame for WebAssembly
+void UpdateDrawFrame(void);     
 
 // UI-functions
 void left_mouse_is_down();
@@ -145,49 +152,54 @@ int main(void){
     toggle_color = GREEN;
     
     // Main game loop
+
+#if defined(PLATFORM_WEB)
+    emscripten_set_main_loop(UpdateDrawFrame, 0, 1);
+#else
     while (!WindowShouldClose()){  
-        
-        if(IsMouseButtonDown(MOUSE_BUTTON_LEFT)){
-            left_mouse_is_down();
-        }
-
-        if(IsMouseButtonDown(MOUSE_BUTTON_RIGHT)){
-            right_mouse_is_down();
-        }
-
-        // prepare color for searched path of a algorythm
-        if(!queue_is_empty(search_path)){
-            set_search_path_tile();
-        }
-
-        // prepare color for final path of a algorythm
-        if(queue_is_empty(search_path) && !queue_is_empty(final_path)){
-            set_final_path_tile();
-        }
-        
-        // Rendering
-        BeginDrawing();
-        {
-            ClearBackground(WHITE);
-
-            // draws all vertices
-            draw_tiles();
-
-            // draw elapsed Time
-            DrawText(time_buffer, 300, 730, 40, BLACK);
-
-            draw_buttons();
-
-            DrawFPS(SCREENWIDTH -80, SCREENHEIGHT - 80);
-        }
-        EndDrawing();
+        UpdateDrawFrame();
     }
-
+#endif
     // De-Initialization
     CloseWindow();
     de_init_tiles();
     free(search_path);
     return 0;
+}
+
+void UpdateDrawFrame(void){
+    if(IsMouseButtonDown(MOUSE_BUTTON_LEFT)){
+        left_mouse_is_down();
+    }
+
+    if(IsMouseButtonDown(MOUSE_BUTTON_RIGHT)){
+        right_mouse_is_down();
+    }
+
+    // prepare color for searched path of a algorythm
+    if(!queue_is_empty(search_path)){
+        set_search_path_tile();
+    }
+
+    // prepare color for final path of a algorythm
+    if(queue_is_empty(search_path) && !queue_is_empty(final_path)){
+        set_final_path_tile();
+    }
+        
+    // Rendering
+    BeginDrawing();
+    {
+        ClearBackground(WHITE);
+
+        // draws all vertices
+        draw_tiles();
+
+        // draw elapsed Time
+        DrawText(time_buffer, 300, 730, 40, BLACK);
+        draw_buttons();
+        DrawFPS(SCREENWIDTH -80, SCREENHEIGHT - 80);
+    }
+    EndDrawing();
 }
 
 void init_buttons(){
@@ -239,7 +251,7 @@ void init_buttons(){
     algo_button_background.x = 730;
     algo_button_background.y = 190 ;
 
-    // Background for maze buttons
+    // Background for maze buttonstimedt
     mazebutton_background.height = 100;
     mazebutton_background.width = 320;
     mazebutton_background.x = 730;
@@ -293,22 +305,22 @@ void start_algorithm(void (*f) ()){
     //    queue_init(final_path);
     //    de_init_tiles();
     //    init_tiles(false);
-    //    time = GetTime();
+    //    timedt = GetTime();
     //    f();
-    //    time = GetTime() - time;
-    //    sprintf(time_buffer, "Elapsed Time:\n %.10f [ms]", time * 1000);
+    //    timedt = GetTime() - timedt;
+    //    sprintf(time_buffer, "Elapsed Time:\n %.10f [ms]", timedt * 1000);
     //
-    //    printf("%d;%.10f\n", i, time * 1000);
+    //    printf("%d;%.10f\n", i, timedt * 1000);
     //}
 
     queue_init(search_path);
     queue_init(final_path);
     de_init_tiles();
     init_tiles(false);
-    time = GetTime();
+    timedt = GetTime();
     f();
-    time = GetTime() - time;
-    sprintf(time_buffer, "Elapsed Time:\n %.10f [ms]", time * 1000);
+    timedt = GetTime() - timedt;
+    sprintf(time_buffer, "Elapsed Time:\n %.10f [ms]", timedt * 1000);
 }
 
 // handle left mouse click
