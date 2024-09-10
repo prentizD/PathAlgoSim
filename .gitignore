@@ -1,7 +1,3 @@
 <<<<<<< HEAD
 .vscode
 *.exe
-build/
-game.html
-game.wasm
-game.js
