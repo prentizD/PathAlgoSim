@@ -1,6 +1,22 @@
+# Variablen für Kompilierungsflags und Dateinamen
+CC = emcc
+FLAGS = -Os -Wall -DPLATFORM_WEB
+LIBRARY = ./lib/libraylib.a
+INCLUDE_DIR = ./include
+SHELL_FILE = ./minshell.html
+GLFW = -s USE_GLFW=3
+OUTPUT_DIR = build
+TARGET = game
+SRC = ./src/main.c
 
-game.htlm: main.c 
-	emcc -o game.html main.c -Os -Wall ./lib/libraylib.a -I./include -s USE_GLFW=3 -s --shell-file ./minshell.html -DPLATFORM_WEB
+# Ziel: HTML-Datei erstellen
+$(OUTPUT_DIR)/$(TARGET).html: $(OUTPUT_DIR) $(SRC)
+	$(CC) -o $(OUTPUT_DIR)/$(TARGET).html $(SRC) $(FLAGS) $(LIBRARY) -I$(INCLUDE_DIR) $(GLFW) -s --shell-file $(SHELL_FILE)
 
+$(OUTPUT_DIR):
+	mkdir -p $(OUTPUT_DIR)
+
+# Ziel: Bereinigung der erstellten Dateien
 clean:
-	rm -f game.wasm game.html game.js
+	rm -rf $(OUTPUT_DIR)
+
