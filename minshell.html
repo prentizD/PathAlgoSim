@@ -1,39 +1,49 @@
-<!doctype html>
+<!DOCTYPE html>
 <html>
-    <head>
-        <style>
-            body { 
-              margin: 0px; 
-              overflow: hidden; 
-              background-color: rgb(192, 142, 33);
-            }
-            canvas.emscripten { border: 0px none; background-color: black;}
-        </style>
-    </head>
-    <body>
+
+<head>
+    <style>
+        body {
+            margin: 0px;
+            overflow: hidden;
+            background-color: rgb(192, 142, 33);
+        }
+
+        canvas.emscripten {
+            border: 0px none;
+            background-color: black;
+        }
+    </style>
+</head>
+
+<body>
+    <div style="display: flex; align-items: center; justify-content: center; flex-direction: column;">
         <h4>Path algorithm visiulizer</h4>
-        <canvas class=emscripten id=canvas oncontextmenu=event.preventDefault() tabindex=-1></canvas>
-        <p id="output" />
-        <script>
-            var Module = {
-                print: (function() {
-                    var element = document.getElementById('output');
-                    if (element) element.value = ''; // clear browser cache
-                    return function(text) {
-                        if (arguments.length > 1) text = Array.prototype.slice.call(arguments).join(' ');
-                        console.log(text);
-                        if (element) {
-                          element.value += text + "\n";
-                          element.scrollTop = element.scrollHeight; // focus on bottom
-                        }
-                    };
-                })(),
-                canvas: (function() {
-                    var canvas = document.getElementById('canvas');
-                    return canvas;
-                })()
-            };
-        </script>
-        {{{ SCRIPT }}}
-    </body>
+        <canvas class="emscripten" id="canvas" oncontextmenu="event.preventDefault()" tabindex="-1"></canvas>
+    </div>
+    <p id="output" />
+    <script>
+        var Module = {
+            print: (function () {
+                var element = document.getElementById("output");
+                if (element) element.value = ""; // clear browser cache
+                return function (text) {
+                    if (arguments.length > 1)
+                        text = Array.prototype.slice.call(arguments).join(" ");
+                    console.log(text);
+                    if (element) {
+                        element.value += text + "\n";
+                        element.scrollTop = element.scrollHeight; // focus on bottom
+                    }
+                };
+            })(),
+            canvas: (function () {
+                var canvas = document.getElementById("canvas");
+                return canvas;
+            })(),
+        };
+    </script>
+    {{{ SCRIPT }}}
+</body>
+
 </html>
